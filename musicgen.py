@@ -66,11 +66,11 @@ def genKey(mode):
     return scale
 
 def genChords(scale, chordDepth):
-    chords = [[],[],[],[],[],[],[],[]]
+    chords = [[],[],[],[],[],[],[]]
 
     # There must be a better way to do this. Probably a generator or itertools.
     repeatedScale = scale*3
-    for i in range(0,8):
+    for i in range(0,7):
         chords[i].append(repeatedScale[i])
         chords[i].append(repeatedScale[i + 2])
         chords[i].append(repeatedScale[i + 4])
@@ -83,41 +83,74 @@ def genChords(scale, chordDepth):
 
     return chords
 
-def genProgression(chords, phraseLength):
-    pass
+def genProgression(chords, sectionLength, harmonicRhythm):
 
+    # create progression using simplest rules of progression
+    progression = []
+    for i in range(sectionLength):
+        if i == 0:
+            progression.append(chords[0])
+        else:
+            if progression[i-1] == chords[0]:
+                progression.append(random.choice([chords[0], chords[2], chords[3], chords[4], chords[5]]))
+            elif progression[i-1] == chords[1]:
+                progression.append(random.choice([chords[1], chords[3], chords[4], chords[5], chords[6]]))
+            elif progression[i-1] == chords[2]:
+                progression.append(random.choice([chords[2], chords[5]]))
+            elif progression[i-1] == chords[3]:
+                progression.append(random.choice([chords[3], chords[2], chords[4], chords[5]]))
+            elif progression[i-1] == chords[4]:
+                progression.append(random.choice([chords[4], chords[6], chords[0]]))
+            elif progression[i-1] == chords[5]:
+                progression.append(random.choice([chords[5], chords[0], chords[1], chords[5]]))
+            elif progression[i-1] == chords[6]:
+                progression.append(random.choice([chords[6], chords[0]]))
+    return progression
+            
+            
 scale = genKey(mode)
 chords = genChords(scale, chordDepth)
+progression = genProgression(chords, sectionLength, harmonicRhythm)
 
 ###############################################
 ##              Melody Generator             ##
 ###############################################
-#                                             #
+#                                             # 
 #   Currently, the Melody Generator uses the  #
 # chord progression as a guide to create the  #
 # the melody.  Depending on the chordDepth,   #
 # the melody will include varying amounts of  #
-# non-harmonic tones.
+# non-harmonic tones.                         #
 #                                             #
 #   Later on it will include support for non- #
 # harmonic tones and common scale alterations.#
 #                                             #
 ###############################################
 
-def genMelody(scale, phraseLength):
-    """ Creates a list with phraseLength number of slots and populates
+def genMelody(scale, sectionLength, progression):
+    """ Creates a list with sectionLength*8 number of slots and populates
         it with notes (or "REST") from scale  """
     
     scale.append("REST")
 
     melody = []
-    for i in range(phraseLength):
-        melody.append(scale[random.randint(0,len(scale)-1)])
+
+    for i in progression:
+        for j in range(8):
+            k = random.randint(0,4)
+            if k == 0 or k == 1:
+                melody.append(scale[random.randint(0,len(scale)-1)])
+            elif k == 2:
+                melody.append(random.choice(i))
+            elif k == 3:
+                melody.append("REST")
+            elif k == 4:
+                melody.append(melody[-1])
+
 
     return melody
 
-melody = genMelody(scale, phraseLength)
-
+melody = genMelody(scale, sectionLength, progression)
 
 ###############################################
 ##           Arrangement Generator           ##

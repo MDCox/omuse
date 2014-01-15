@@ -13,3 +13,17 @@
 # contain the main loop.                      #
 #                                             #
 ###############################################
+
+from musicgen import *
+
+print "Welcome to omuse!"
+
+while True:
+    command = raw_input("type 'gen' to generate a peice: ")
+    if command == 'gen':
+        print "melody:\n" + str(melody)
+        print "scale:\n" + str(scale)
+        print "chords:\n" + str(chords)
+        print "progression:\n" + str(progression)
+    else:
+        break

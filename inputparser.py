@@ -10,11 +10,14 @@
 #                                             #
 ###############################################
 
-# number of eigth notes in a phrase
-phraseLength = 32
+# number of bars in a section
+sectionLength = 12
 
 # tempo of piece in beats per minute
 tempo = 120
+
+# Speed that chords change, measured in bars (.5 is a half note)
+harmonicRhythm = 1
 
 # not sure how to represent instrumentation yet.
 # To be figured out once music is able to be synthesized.
